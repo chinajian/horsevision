@@ -1,5 +1,5 @@
 #活动设置
-create table `h5_luckydraw_config`(
+create table `h5_luckydraw_sys_config`(
 	`lid` mediumint unsigned not null auto_increment,
 	`activity_name` varchar(64) not null default '' comment '活动名称',
 	`exchange_code` char(6) not null default '' comment '兑换码',#用于线下兑换的时候，输入兑换码
@@ -7,14 +7,15 @@ create table `h5_luckydraw_config`(
 	`end_time` int unsigned not null default 0 comment '结束时间',
 	`is_close` tinyint(1) unsigned not null default 0 comment '是否关闭',#0-活动正常进行中 1-活动已关闭
 	`is_test` tinyint(1) unsigned not null default 1 comment '是否测试',#0-正式运营中 1-测试中
-	`appid` char(18) not null default '' comment 'appid',#组合规则 'h5ld' + 本次的id + 随机字符串（保证整体18位）
+	`appid` char(18) not null default '' comment 'appid',#组合规则 'h5ld' + comid + 本次的id + 随机字符串（保证整体18位）
 	`comid` mediumint unsigned not null default 0,#单位id
 	primary key (`lid`)
 ) engine=InnoDB default charset=utf8;
 insert into h5_luckydraw_config (lid, appid) values(1, "h5ld1gs648e15smt38");
 
+
 #抽奖时间段,比如5月1日12:00~13:00,5月1日14:00~15:00
-create table `h5_luckydraw_time`(
+create table `h5_luckydraw_time_quantum`(
 	`tid` mediumint unsigned not null auto_increment,
 	`luckydraw_begin_time` int unsigned not null default 0 comment '开始时间',
 	`luckydraw_end_time` int unsigned not null default 0 comment '结束时间',
@@ -36,6 +37,7 @@ create table `h5_luckydraw_prize`(
 ) engine=InnoDB default charset=utf8;
 insert into h5_luckydraw_prize (pid, prize_name, is_thanks, lid) values(1, "谢谢参与", 1, 0);
 
+
 #抽奖配比
 create table `h5_luckydraw_ratio`(
 	`id` mediumint unsigned not null auto_increment,
@@ -48,3 +50,30 @@ create table `h5_luckydraw_ratio`(
 	primary key (`id`)
 ) engine=InnoDB default charset=utf8;
 
+
+#系统操作日志
+create table `h5_luckydraw_sys_log`(
+	`log_id` int unsigned not null auto_increment,
+	`mid` mediumint not null default 0 comment '用户ID',
+	`mname` varchar(64) not null default '' comment '用户名',
+	`login_add` varchar(128) not null default '' comment '登录地点',
+	`login_ip` bigint not null default 0 comment '登录ip',
+	`content` varchar(512) not null default '' comment '日志内容',
+	`operate_time` int unsigned not null default 0 comment '操作时间',
+	`lid` mediumint unsigned not null default 0,#h5_luckydraw_config 表中的lid 的外键
+	primary key (`log_id`),
+	key `uname` (`mname`),
+	key `content` (`content`),
+	key `operate_time` (`operate_time`)
+) engine=MyISAM default charset=utf8;
+
+
+#抽奖日志
+create table `h5_luckydraw_draw_log`(
+	`id` int unsigned not null auto_increment,
+	`pid` mediumint unsigned not null default 0,#h5_luckydraw_prize 表中的pid 的外键
+	`uid` int unsigned not null default 0,#用户ID，取loginy应用（外部系统）
+	`exchange_time` int unsigned not null default 0 comment '兑换时间',
+	`draw_time` int unsigned not null default 0 comment '抽奖时间',
+	primary key (`id`)
+) engine=InnoDB default charset=utf8;

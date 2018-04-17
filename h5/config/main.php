@@ -5,13 +5,21 @@ $params = array_merge(
     require __DIR__ . '/params.php',
     require __DIR__ . '/params-local.php'
 );
+$db = require __DIR__ . '/db.php';
 
 return [
     'id' => 'app-h5',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'h5\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        'admin' => [
+            'class' => 'app\modules\admin\admin',//抽奖后台管理模块
+        ],
+        'api' => [
+            'class' => 'app\modules\api\api',//抽奖API
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-h5',
@@ -45,6 +53,10 @@ return [
             ],
         ],
         */
+        'db' => $db,
+        'timeZone' => 'Asia/Shanghai',
+        'language' => 'zh-CN',
+        'charset' => 'UTF-8',
     ],
     'params' => $params,
 ];
