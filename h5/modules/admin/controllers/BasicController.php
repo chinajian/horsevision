@@ -4,6 +4,7 @@ namespace app\modules\admin\controllers;
 
 use yii;
 use yii\web\Controller;
+use app\models\Album;
 
 
 class BasicController extends Controller
@@ -37,10 +38,10 @@ class BasicController extends Controller
                             "a" => 'index',
                             "data" => '',
                         ),array(
-                            "name" => '抽奖时间设置',
+                            "name" => '场次设置',
                             "icon" => '',
                             "m" => 'Admin',
-                            "c" => 'time_quantum',
+                            "c" => 'season',
                             "a" => 'index',
                             "data" => '',
                         ),array(
@@ -74,6 +75,13 @@ class BasicController extends Controller
                             "m" => 'Admin',
                             "c" => 'ratio',
                             "a" => 'ratio-list',
+                            "data" => '',
+                        ),array(
+                            "name" => '概率设置',
+                            "icon" => '',
+                            "m" => 'Admin',
+                            "c" => 'probability',
+                            "a" => 'index',
                             "data" => '',
                         )
                     ]
@@ -140,13 +148,13 @@ class BasicController extends Controller
         if($_FILES and $post['name']){//有图片上传
             $albumModel = new Album();
             if($fileName = $albumModel->upload($post)){
-                return showRes(200, $fileName);
+                return ShowRes(0, $fileName);
             }else{
-                return showRes(300, $albumModel->getErrors());
+                return ShowRes(30010, $albumModel->getErrors());
             }
             return;
         }
-        return showRes(300, '没有传图片！');
+        return ShowRes(30000, '没有传图片！');
     }
 
 }

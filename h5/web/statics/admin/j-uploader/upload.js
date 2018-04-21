@@ -198,7 +198,7 @@ function create(url, uploadObj, showlistObj, progresslistObj, count)
     });
     // 文件上传成功。
     uploader.on('uploadSuccess', function(file, response) {
-        if(response.status == 200){
+        if(response.code == 0){
             var $li = $(
                 '<li id="' + file.id + '"><img src="' + response.mes + '"><span class="del-img"></span></li>'
                 ),

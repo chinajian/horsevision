@@ -23,9 +23,9 @@ class Sys_logController extends BasicController
             $currPage = 1;
         }
         $sysLogModel = SysLog::find();
-        $count = $sysLogModel->count();
+        $count = $sysLogModel->where('lid = :lid', [':lid' => Yii::$app->params['lid']])->count();
         $pageSize = Yii::$app->params['pageSize'];
-        $sysLogList = $sysLogModel->offset($pageSize*($currPage-1))->limit($pageSize)->orderBy(['log_id'=>SORT_DESC])->all();
+        $sysLogList = $sysLogModel->where('lid = :lid', [':lid' => Yii::$app->params['lid']])->offset($pageSize*($currPage-1))->limit($pageSize)->orderBy(['log_id'=>SORT_DESC])->all();
     	// P($sysLogList);
         return $this->render('index', [
             'sysLogList' => $sysLogList,

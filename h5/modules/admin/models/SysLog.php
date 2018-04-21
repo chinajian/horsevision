@@ -25,6 +25,8 @@ class SysLog extends \yii\db\ActiveRecord
             ['content', 'required', 'message' => '日志内容不能为空'],
             ['content', 'string', 'max' => 300],
             ['operate_time', 'safe'],
+            ['lid', 'required', 'message' => 'lid不能为空'],
+            ['lid', 'integer', 'message' => 'lid必须为正整数'],
         ];
     }
 
@@ -38,6 +40,7 @@ class SysLog extends \yii\db\ActiveRecord
         $syslogModel->login_ip = ip2long(Yii::$app->request->userIP);
         $syslogModel->content = $content;
         $syslogModel->operate_time = time();
+        $syslogModel->lid = Yii::$app->params['lid'];
         if($syslogModel->validate()){
             if($syslogModel->save(false)){
                 return true;
